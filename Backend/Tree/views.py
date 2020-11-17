@@ -1,7 +1,10 @@
 from collections import OrderedDict
+
+from django.forms import model_to_dict
 from rest_framework import viewsets
 from rest_framework.response import Response
-from Tree.models import Catalog
+
+from Tree.models import Catalog, Function, Class, Parameter
 from Tree.serializers import TreeSerializer
 
 
@@ -10,27 +13,32 @@ class TreeViewSet(viewsets.ModelViewSet):
     serializer_class = TreeSerializer
 
     def list(self, request, *args, **kwargs):
-        treeData = self.buildTree()
-        return Response(treeData)
+        return Response(self.buildTree())
 
     def buildTree(self):
-        return TreeViewSet.tree_queryset_values(self.queryset)
+        dataMap = TreeViewSet.buildTreeFromQueryset(self.queryset)
+        retMap = OrderedDict()
+        for k, v in dataMap.items():
+            if v.get('isRoot', False):
+                retMap[k] = v
+        return {
+            'index': list(retMap.keys()),
+            'data': retMap,
+        }
 
     @staticmethod
-    def _tree_queryset_values(qs, keys=None, order_by_keys=None):
-        if not hasattr(qs.model, '_mptt_meta'):
+    def buildTreeFromQueryset(queryset, keys=None, orderByKeys=None):
+        if not hasattr(queryset.model, '_mptt_meta'):
             raise TypeError('queryset must be MPTTModel queryset')
 
         if not keys:
-            opts = qs.model._mptt_meta
+            opts = queryset.model._mptt_meta
             keys = (
                 'id',
                 "name",
                 opts.level_attr,
-                f'{ opts.parent_attr }_id',
+                f'{opts.parent_attr}_id',
                 opts.tree_id_attr,
-                opts.left_attr,
-                opts.right_attr,
             )
 
         if 'id' not in keys:
@@ -42,39 +50,54 @@ class TreeViewSet(viewsets.ModelViewSet):
         if 'parent_id' not in keys:
             raise ValueError('parent_id must in keys')
 
-        if not order_by_keys:
-            order_by_keys = ['id', 'lft']
+        if not orderByKeys:
+            orderByKeys = ['id', 'lft']
 
-        if not qs.ordered:
-            qs = qs.order_by(*order_by_keys)
-
-        qs = qs.values(*keys)
+        if not queryset.ordered:
+            queryset = queryset.order_by(*orderByKeys)
 
         # 组织树数据格式 LIFO
-        data_map = OrderedDict()
-        for cur_node in qs:
-            cur_node_pk = cur_node.get('id')
-            # 为当前节点分配子节点数组
-            cur_node['children'] = list()
-            data_map[cur_node_pk] = cur_node
-            cur_node_parent_id = cur_node.get('parent_id')
-            if cur_node_parent_id in data_map:
+        dataMap = OrderedDict()
+        for currentNode in queryset:
+            tmp = TreeViewSet.addFunctionOrClass(currentNode)
+            currentNodePK = currentNode.pk
+            dataMap[currentNodePK] = tmp
+
+            currentNodeParent = currentNode.parent
+            if currentNodeParent and currentNodeParent.id in dataMap:
                 # 当前节点是子节点，追加到父节点的 child 列表中
-                data_map[cur_node_parent_id]['children'].append(cur_node)
-                data_map[cur_node_pk]['is_root'] = False
-            else:
-                data_map[cur_node_pk]['is_root'] = True
-        return data_map
+                dataMap[currentNodeParent.id]['children'].append(tmp)
+        return dataMap
 
     @staticmethod
-    def tree_queryset_values(qs, keys=None, order_by_keys=None):
-        data_map = TreeViewSet._tree_queryset_values(qs, keys=keys, order_by_keys=order_by_keys)
-        ret_map = OrderedDict()
-        for k, v in data_map.items():
-            if v.get('is_root', False):
-                ret_map[k] = v
-        data = {
-            'index': list(ret_map.keys()),
-            'data': ret_map,
+    def addFunctionOrClass(cur):
+        tmp = {
+            "scopedSlots": {
+                "title": 'name',
+                "key": "id",
+            },
+            "id": cur.id,
+            "name": cur.name,
+            "isRoot": cur.is_root_node(),
+            "children": list()
         }
-        return data
+
+        # 如果当前节点是叶子节点，需要添加相应的函数或类到children
+        functions = Function.objects.all().filter(belong=cur)
+        if cur.is_leaf_node() and functions:
+            for func in functions:
+                val = model_to_dict(func)
+                val["scopedSlots"] = {
+                    "title": 'name',
+                    "key": "id"
+                }
+
+                # 添加参数内容到函数中
+                val["parameters"] = list()
+                parameters = Parameter.objects.all().filter(belongFunction=func)
+                if parameters:
+                    for para in parameters:
+                        val["parameters"].append(model_to_dict(para))
+
+                tmp["children"].append(val)
+        return tmp

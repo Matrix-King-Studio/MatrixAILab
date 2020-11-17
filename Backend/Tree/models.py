@@ -15,8 +15,8 @@ class Catalog(MPTTModel):
 
 
 class Function(models.Model):
-    name = models.CharField(max_length=255, verbose_name="函数名")
-    nickname = models.CharField(max_length=255, verbose_name="昵称", default="", blank=True, null=True)
+    functionName = models.CharField(max_length=255, verbose_name="函数名")
+    name = models.CharField(max_length=255, verbose_name="昵称", default="", blank=True, null=True)
     describe = models.TextField(verbose_name="描述")
 
     belong = models.ForeignKey(to="Catalog", on_delete=models.PROTECT, null=True, blank=True, verbose_name="所属目录")
@@ -26,8 +26,8 @@ class Function(models.Model):
 
 
 class Class(models.Model):
-    name = models.CharField(max_length=255, verbose_name="类名")
-    nickname = models.CharField(max_length=255, verbose_name="昵称", default="", blank=True, null=True)
+    className = models.CharField(max_length=255, verbose_name="类名")
+    name = models.CharField(max_length=255, verbose_name="昵称", default="", blank=True, null=True)
     describe = models.TextField(verbose_name="描述")
 
     belong = models.ForeignKey(to="Catalog", on_delete=models.PROTECT, null=True, blank=True, verbose_name="所属目录")

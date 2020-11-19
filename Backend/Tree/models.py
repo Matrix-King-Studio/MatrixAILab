@@ -37,9 +37,10 @@ class Class(models.Model):
 
 
 class Parameter(models.Model):
-    name = models.CharField(max_length=255, verbose_name="参数名")
+    parameterName = models.CharField(max_length=255, verbose_name="参数名")
+    name = models.CharField(max_length=255, verbose_name="昵称")
     describe = models.TextField(verbose_name="描述")
-    # type = models.ForeignKey()
+    type = models.CharField(max_length=255, verbose_name="类型", default="str")
     value = models.TextField(blank=True, null=True)
     belongClass = models.ForeignKey(to="Class", on_delete=models.PROTECT, null=True, blank=True)
     belongFunction = models.ForeignKey(to="Function", on_delete=models.PROTECT, null=True, blank=True)

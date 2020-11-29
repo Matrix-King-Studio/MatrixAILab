@@ -4,7 +4,7 @@ from django.forms import model_to_dict
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from Tree.models import Catalog, Function, Class, Parameter
+from Tree.models import Catalog, Function, Parameter, Class
 from Tree.serializers import TreeSerializer
 
 
@@ -98,6 +98,43 @@ class TreeViewSet(viewsets.ModelViewSet):
                 if parameters:
                     for para in parameters:
                         val["parameters"].append(model_to_dict(para))
+
+                tmp["children"].append(val)
+
+        calsses = Class.objects.all().filter(belong=cur)
+        if cur.is_leaf_node() and calsses:
+            for cla in calsses:
+                val = model_to_dict(cla)
+                val["scopedSlots"] = {
+                    "title": 'name',
+                    "key": "id"
+                }
+
+                # 添加参数内容到函数中
+                val["parameters"] = list()
+                parameters = Parameter.objects.all().filter(belongClass=cla)
+                if parameters:
+                    for para in parameters:
+                        val["parameters"].append(model_to_dict(para))
+
+                # 添加类所拥有的函数
+                val["children"] = list()
+                functions = Function.objects.all().filter(belongClass=cla)
+                if functions:
+                    for func in functions:
+                        value = model_to_dict(func)
+                        value["scopedSlots"] = {
+                            "title": 'name',
+                            "key": "id"
+                        }
+
+                        # 添加参数内容到函数中
+                        value["parameters"] = list()
+                        parameters = Parameter.objects.all().filter(belongFunction=func)
+                        if parameters:
+                            for para in parameters:
+                                value["parameters"].append(model_to_dict(para))
+                        val["children"].append(value)
 
                 tmp["children"].append(val)
         return tmp

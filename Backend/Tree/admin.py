@@ -7,7 +7,6 @@ from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 
 
-# Register your models here.
 class ParameterInline(admin.StackedInline):
     model = Parameter
     extra = 1

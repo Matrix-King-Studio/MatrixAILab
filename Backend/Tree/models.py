@@ -20,6 +20,7 @@ class Function(models.Model):
     describe = models.TextField(verbose_name="描述")
 
     belong = models.ForeignKey(to="Catalog", on_delete=models.PROTECT, null=True, blank=True, verbose_name="所属目录")
+    belongClass = models.ForeignKey(to="Class", on_delete=models.PROTECT, null=True, blank=True, verbose_name="所属类")
 
     def __str__(self):
         return self.name
@@ -41,6 +42,8 @@ class Parameter(models.Model):
     name = models.CharField(max_length=255, verbose_name="昵称")
     describe = models.TextField(verbose_name="描述")
     type = models.CharField(max_length=255, verbose_name="类型", default="str")
+    category = models.CharField(max_length=255, choices=(("input", "输入"), ("output", "输出"), ("parameter", "参数")),
+                                default="parameter")
     value = models.TextField(blank=True, null=True)
     belongClass = models.ForeignKey(to="Class", on_delete=models.PROTECT, null=True, blank=True)
     belongFunction = models.ForeignKey(to="Function", on_delete=models.PROTECT, null=True, blank=True)

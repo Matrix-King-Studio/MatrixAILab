@@ -7,5 +7,11 @@ export default {
             method: "POST",
             data: graphData
         })
-    }
+    },
+    runGraph(graphId) {
+        return service({
+            url: `/graph/${graphId}/run/`,
+            method: "GET",
+        })
+    },
 }

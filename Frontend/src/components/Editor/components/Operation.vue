@@ -12,6 +12,7 @@
           type="primary"
           shape="circle"
           size="small"
+          style="float:left; margin-left: 7px"
           :icon="operation.icon"
           :loading="operation.loading"
           @click="operation.func(operation)"/>
@@ -21,6 +22,7 @@
 </template>
 
 <script>
+import graphApi from "@/config/api/graph";
 import {mapGetters} from "vuex";
 
 export default {
@@ -28,7 +30,8 @@ export default {
   data() {
     return {
       operations: [
-        {id: 1, title: "保存", icon: "save", loading: false, func: this.saveGraph}
+        {id: 1, title: "保存", icon: "save", loading: false, func: this.saveGraph},
+        {id: 2, title: "运行", icon: "caret-right", loading: false, func: this.runGraph}
       ]
     }
   },
@@ -47,6 +50,17 @@ export default {
     saveGraph(operation) {
       operation.loading = true
       this.$store.dispatch("graph/SaveGraph").then(res => {
+        console.log(res);
+        this.$message.success("保存成功！");
+      }).catch(err => {
+        console.log(err);
+      })
+      operation.loading = false
+    },
+
+    runGraph(operation) {
+      operation.loading = true
+      graphApi.runGraph(1).then(res => {
         console.log(res);
       }).catch(err => {
         console.log(err);

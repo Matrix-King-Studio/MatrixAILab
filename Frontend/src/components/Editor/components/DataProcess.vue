@@ -50,29 +50,18 @@
 <script>
 import G2 from '@antv/g2';
 import file from "@/config/api/file";
-import {mapGetters} from "vuex";
 
 export default {
   name: "DataProcess",
   props: ["fileId"],
   data() {
     return {
+      chart: null,
       columns: [],
       data: [],
       xLabel: "",
       yLabel: ""
     }
-  },
-  computed: {
-    ...mapGetters(["chart"]),
-    chart: {
-      get() {
-        return this.$store.state.chart.chart
-      },
-      set(chart) {
-        this.$store.commit("chart/SetChart", chart)
-      }
-    },
   },
   watch: {
     xLabel(value) {

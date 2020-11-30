@@ -32,6 +32,8 @@ class Node(models.Model):
     shape = models.CharField(max_length=50, verbose_name="节点形状")
     x = models.IntegerField(verbose_name="节点x坐标")
     y = models.IntegerField(verbose_name="节点y坐标")
+    valueType = models.CharField(max_length=50, verbose_name="节点运行结果类型", null=True, blank=True)
+    value = models.TextField(verbose_name="节点运行结果", null=True, blank=True)
 
     graph = models.ForeignKey(to=Graph, on_delete=models.DO_NOTHING)
     classes = models.ForeignKey(to=Class, on_delete=models.DO_NOTHING, blank=True, null=True)
@@ -42,6 +44,12 @@ class Node(models.Model):
 
     def getsize(self):
         return json.loads(self.size)
+
+    def setvalue(self, value):
+        self.value = json.dumps(value)
+
+    def getvalue(self):
+        return json.loads(self.value)
 
     def __str__(self):
         return f"{self.id} - {self.label}"

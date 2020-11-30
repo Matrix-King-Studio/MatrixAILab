@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -6,6 +8,18 @@ from File.models import DataSet
 from File.serializers import DataSetSerializer
 from Project.models import Project, Graph, Node, Edge
 from Project.serializer import ProjectSerializer, GraphSerializer, NodeSerializer, EdgeSerializer
+
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+
+def trainTestSplit(X, y, test_size, random_state):
+    return train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+
+def readCsv(path, header):
+    return pd.read_csv(filepath_or_buffer=path, header=header)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -28,7 +42,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         elif request.method == "POST":
             project = self.get_object()
-            serializer = DataSetSerializer(data=request.data)
+            serializer = DataSetSerializer(data=request.trainData)
             serializer.is_valid(raise_exception=True)
             dataset = serializer.save()
             project.dataset_set = dataset
@@ -43,8 +57,8 @@ class GraphViewSet(viewsets.ModelViewSet):
     @action(methods=["GET", "POST", "DELETE", "PATCH"], detail=True)
     def data(self, request, pk):
         if request.method == "POST":
-            nodes = request.data.get("nodes", None)
-            edges = request.data.get("edges", None)
+            nodes = request.trainData.get("nodes", None)
+            edges = request.trainData.get("edges", None)
             for node in nodes:
                 if not Node.objects.all().filter(id=node["id"]).exists():
                     nodeSerializer = NodeSerializer(data=node)
@@ -62,3 +76,54 @@ class GraphViewSet(viewsets.ModelViewSet):
                     edgeSerializer.is_valid(raise_exception=True)
                     edgeSerializer.save(graph_id=pk)
             return Response({"message": "success!"}, status=status.HTTP_201_CREATED)
+
+    @action(methods=["GET"], detail=True)
+    def run(self, request, pk):
+        # 读取训练数据集
+        trainData = readCsv(r"G:\Project\MatrixAILab\Backend\media\file\train.csv", 0)
+
+        trainData.drop("Id", axis=1, inplace=True)
+
+        # 数据预处理
+        na_count = trainData.isnull().sum().sort_values(ascending=False)
+        na_rate = na_count / len(trainData)
+        na_data = pd.concat([na_count, na_rate], axis=1, keys=['count', 'ratio'])
+        trainData.drop(na_data[na_data['count'] > 1].index, axis=1, inplace=True)
+        trainData.drop(trainData.loc[trainData['Electrical'].isnull()].index, inplace=True)
+        for col in trainData.columns:
+            if trainData[col].dtypes == "object":
+                trainData[col], uniques = pd.factorize(trainData[col])
+
+        # 训练/测试集划分
+        XData, yData = trainData.iloc[:, :-1], trainData.iloc[:, -1]
+        X_train, X_test, y_train, y_test = trainTestSplit(XData, yData, 0.33, 42)
+
+        # 线性回归模型
+        lr = LinearRegression()
+
+        # 拟合
+        lr.fit(X_train, y_train)
+
+        # 评测
+        score = lr.score(X_test, y_test)
+        print(score)
+
+        # 读取测试数据集
+        testData = readCsv(r"G:\Project\MatrixAILab\Backend\media\file\test.csv", 0)
+
+        # 数据预处理
+        testID = testData["Id"]
+        testData.drop("Id", axis=1, inplace=True)
+        testData.drop(na_data[na_data['count'] > 1].index, axis=1, inplace=True)
+        for col in testData.columns:
+            if testData[col].dtypes == "object":
+                testData[col], uniques = pd.factorize(testData[col])
+            testData[col].fillna(testData[col].mean(), inplace=True)
+
+        # 预测
+        predict = lr.predict(testData)
+        submit = pd.concat([testID, pd.Series(abs(predict))], axis=1, keys=["Id", "SalePrice"])
+        print(submit.to_json())
+        submit.to_csv(r"G:\Project\MatrixAILab\Backend\media\file\submisson.csv", index=False)
+
+        return Response({"message": "success!"}, status=status.HTTP_200_OK)

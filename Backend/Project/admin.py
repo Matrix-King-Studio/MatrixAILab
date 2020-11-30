@@ -1,8 +1,6 @@
 from django.contrib import admin
 
-from Project.models import Project, Edge
-from Project.models import Graph
-from Project.models import Node
+from Project.models import Project, Edge, Graph, Node
 
 
 class NodeAdmin(admin.StackedInline):

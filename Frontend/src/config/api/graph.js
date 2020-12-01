@@ -20,5 +20,18 @@ export default {
             method: "GET",
             params: {nodeId: nodeId},
         })
+    },
+    getRunGraphNodeFile(graphId, nodeId) {
+        return service({
+            url: `/graph/${graphId}/nodeFile/`,
+            method: "GET",
+            params: {nodeId: nodeId},
+        })
+    },
+    getGraphCode(graphId) {
+        return service({
+            url: `/graph/${graphId}/code/`,
+            method: "GET",
+        })
     }
 }

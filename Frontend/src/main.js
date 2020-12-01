@@ -4,6 +4,9 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
+import axios from "axios"
+Vue.prototype.$axios = axios
+
 import Antd from "ant-design-vue"
 import "ant-design-vue/dist/antd.css"
 Vue.use(Antd)

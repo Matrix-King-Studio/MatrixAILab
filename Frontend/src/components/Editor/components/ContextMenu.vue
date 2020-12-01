@@ -10,6 +10,13 @@
         <h1>{{ data.value }}</h1>
       </div>
       <div v-show="data.type === 'DataFrame'">
+        <a-button
+          type="primary"
+          icon="download"
+          size="large"
+          @click="downloadFile()">
+          Download
+        </a-button>
         <div id="dataFrameChartMountNode"></div>
       </div>
     </a-modal>
@@ -55,6 +62,15 @@ export default {
         width: 1000,
         height: 400
       });
+    },
+
+    downloadFile() {
+      window.location.href = "http://127.0.0.1:8000/media/file/submisson.csv"
+      // graphApi.getRunGraphNodeFile(this.graphId, this.selectNode._cfg.id).then(res => {
+      //   console.log(res);
+      // }).catch(err => {
+      //   console.log(err);
+      // })
     },
 
     getContextMenu(x, y) {

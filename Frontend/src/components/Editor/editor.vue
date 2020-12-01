@@ -21,6 +21,7 @@ import Editor from "@/components/Editor/components/Editor";
 import modelRectNode from "@/config/graph/modelRectNode";
 import addEdge from "@/config/behavior/add-edge";
 import hoverNode from "@/config/behavior/hover-node";
+import selectNode from "@/config/behavior/select-node";
 import {mapGetters} from "vuex";
 import customEdge from "@/config/graph/customEdge";
 
@@ -56,6 +57,7 @@ export default {
       addEdge.init()
       customEdge.init()
       hoverNode.init()
+      selectNode.init()
     },
   }
 }

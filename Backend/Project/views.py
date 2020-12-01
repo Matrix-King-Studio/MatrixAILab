@@ -1,5 +1,3 @@
-import json
-
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -57,8 +55,8 @@ class GraphViewSet(viewsets.ModelViewSet):
     @action(methods=["GET", "POST", "DELETE", "PATCH"], detail=True)
     def data(self, request, pk):
         if request.method == "POST":
-            nodes = request.trainData.get("nodes", None)
-            edges = request.trainData.get("edges", None)
+            nodes = request.data.get("nodes", None)
+            edges = request.data.get("edges", None)
             for node in nodes:
                 if not Node.objects.all().filter(id=node["id"]).exists():
                     nodeSerializer = NodeSerializer(data=node)
@@ -127,3 +125,18 @@ class GraphViewSet(viewsets.ModelViewSet):
         submit.to_csv(r"G:\Project\MatrixAILab\Backend\media\file\submisson.csv", index=False)
 
         return Response({"message": "success!"}, status=status.HTTP_200_OK)
+
+    @action(methods=["GET", "POST"], detail=True)
+    def node(self, request, pk):
+        if request.method == "GET":
+            nodeId = request.GET.get("nodeId", None)
+            node = Node.objects.all().filter(id=nodeId).first()
+            data = {"type": node.valueType, "value": None}
+
+            if node.valueType == "DataFrame":
+                data["value"] = []
+                df = pd.read_json(node.value)
+                for item in df.values:
+                    data["value"].append({"Id": item[0], "SalePrice": item[1]})
+
+            return Response(data, status=status.HTTP_200_OK)

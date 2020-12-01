@@ -121,14 +121,6 @@ export default {
         });
       this.chart.render();
     },
-    selectX(x) {
-      this.xLabel = x
-      this.draw(x, this.yLabel)
-    },
-    selectY(y) {
-      this.yLabel = y
-      this.draw(this.xLabel, y)
-    }
   }
 }
 </script>

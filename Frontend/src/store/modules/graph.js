@@ -5,11 +5,15 @@ import graph from "@/config/api/graph";
 const state = {
     graph: null,
     graphId: 1,
+    selectNode: null,
 }
 
 const mutations = {
     SetGraph: (state, graph) => {
         state.graph = graph
+    },
+    SetSelectNode: (state, node) => {
+        state.selectNode = node
     },
 }
 

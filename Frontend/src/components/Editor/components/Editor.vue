@@ -10,10 +10,12 @@
     </div>
     <div
       id="graphMountNode">
+      <ContextMenu
+        ref="menu"></ContextMenu>
       <Parameter
+        :fileList="fileList"
         :parameters="parameters"
         :parameterVisible="parameterVisible"
-        :fileList="fileList"
         @closeDrawer="closeDrawer"></Parameter>
     </div>
   </div>
@@ -25,12 +27,14 @@ import {mapGetters} from "vuex";
 import file from "@/config/api/file";
 import Parameter from "@/components/Editor/components/Parameter";
 import Operation from "@/components/Editor/components/Operation";
+import ContextMenu from "@/components/Editor/components/ContextMenu";
 
 export default {
   name: "Editor",
   components: {
     Operation,
     Parameter,
+    ContextMenu
   },
   data() {
     return {
@@ -80,10 +84,11 @@ export default {
             'drag-canvas',
             'zoom-canvas',
             'drag-node',
-            "hover-edge",
+            "hover-node",
             'click-select',
             'activate-relations',
-            'brush-select'],
+            'brush-select',
+            "select-node"],
           addEdge: ['add-edge', 'click-select']
         },
       })
@@ -119,27 +124,33 @@ export default {
         this.parameterVisible = false
       })
 
-      this.graph.on('node:mouseenter', (event) => {
-        const { item } = event
+      this.graph.on("node:mouseenter", (event) => {
+        const {item} = event
         this.graph.setItemState(item, 'hover', true)
       })
 
-      this.graph.on('node:mouseleave', (event) => {
-        const { item } = event
+      this.graph.on("node:mouseleave", (event) => {
+        const {item} = event
         this.graph.setItemState(item, 'hover', false)
+      })
+
+      // eslint-disable-next-line no-unused-vars
+      this.graph.on("node:contextmenu", (event) => {
+        event.preventDefault()
+        this.$refs.menu.getContextMenu(event.x + 200, event.y + 64 + 38)
       })
     },
 
     closeDrawer() {
       this.parameterVisible = false
-    }
+    },
   }
 }
+
+document.oncontextmenu = function () {
+  return false;
+}
 </script>
-
-<style scoped>
-
-</style>
 
 <style>
 .g6-component-toolbar {

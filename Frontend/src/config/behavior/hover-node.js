@@ -2,7 +2,7 @@ import G6 from "@antv/g6";
 
 export default {
     init() {
-        G6.registerBehavior('hover-edge', {
+        G6.registerBehavior('hover-node', {
             getEvents() {
                 return {
                     'node:mouseover': 'onMouseover',

@@ -14,4 +14,11 @@ export default {
             method: "GET",
         })
     },
+    getRunGraphNodeResult(graphId, nodeId) {
+        return service({
+            url: `/graph/${graphId}/node/`,
+            method: "GET",
+            params: {nodeId: nodeId},
+        })
+    }
 }

@@ -17,7 +17,7 @@
         key="3"
         tab="可视化"
         :forceRender="true">
-        <span>X:</span>
+        <span>X : </span>
         <a-select
           v-model="xLabel"
           style="width: 120px">
@@ -29,7 +29,7 @@
           </a-select-option>
         </a-select>
         <a-divider type="vertical"/>
-        <span>Y:</span>
+        <span>Y : </span>
         <a-select
           v-model="yLabel"
           style="width: 120px">

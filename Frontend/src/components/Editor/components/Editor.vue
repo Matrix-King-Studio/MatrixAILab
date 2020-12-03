@@ -70,7 +70,7 @@ export default {
       this.graph = new G6.Graph({
         container: graphMountNode,
         width: document.body.clientWidth,
-        height: document.body.clientHeight - 38,
+        height: document.body.clientHeight - 38 - 68,
         minZoom: 0.4,
         maxZoom: 3,
         animate: true,

@@ -5,9 +5,10 @@
       placeholder="Search"
       @change="onChange"/>
     <a-tree
-      v-if="treeData.length > 0"
       showLine
-      defaultExpandAll
+      v-if="treeData.length > 0"
+      :style="treeStyle"
+      :defaultExpandAll="false"
       :draggable="true"
       :tree-data="treeData"
       @dragend="dragend"
@@ -38,6 +39,11 @@ export default {
     return {
       searchValue: '',
       treeData: [],
+      treeStyle: {
+        overflow: 'auto',
+        maxHeight: `${document.body.clientHeight - 38 - 68}px`,
+        maxWidth: '300px',
+      }
     }
   },
   computed: {
@@ -64,7 +70,6 @@ export default {
             key: "id",
           }
         })
-        // console.log(this.treeData);
       }).catch(err => {
         console.log(err);
       })
@@ -170,11 +175,11 @@ export default {
 
       const value = e.target.value;
       const expandedKeys = this.treeData.map(item => {
-          if (item.name.indexOf(value) > -1) {
-            return getParentKey(item.id, this.treeData);
-          }
-          return null;
-        })
+        if (item.name.indexOf(value) > -1) {
+          return getParentKey(item.id, this.treeData);
+        }
+        return null;
+      })
         .filter((item, i, self) => item && self.indexOf(item) === i);
       Object.assign(this, {
         expandedKeys,
@@ -186,6 +191,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.ant-tree {
+  overflow: auto;
+  max-height: 800px;
+}
 </style>

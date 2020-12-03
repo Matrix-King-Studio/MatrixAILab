@@ -121,7 +121,6 @@ class GraphViewSet(viewsets.ModelViewSet):
         # 预测
         predict = lr.predict(testData)
         submit = pd.concat([testID, pd.Series(abs(predict))], axis=1, keys=["Id", "SalePrice"])
-        print(submit.to_json())
         submit.to_csv(r"G:\Project\MatrixAILab\Backend\media\file\submisson.csv", index=False)
 
         return Response({"message": "success!"}, status=status.HTTP_200_OK)
@@ -138,5 +137,6 @@ class GraphViewSet(viewsets.ModelViewSet):
                 df = pd.read_json(node.value)
                 for item in df.values:
                     data["value"].append({"Id": item[0], "SalePrice": item[1]})
-
+            else:
+                data["value"] = node.value
             return Response(data, status=status.HTTP_200_OK)

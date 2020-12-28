@@ -33,6 +33,7 @@ export default {
         {id: 1, title: "保存", icon: "save", loading: false, func: this.saveGraph},
         {id: 2, title: "运行", icon: "caret-right", loading: false, func: this.runGraph},
         {id: 3, title: "下载code", icon: "download", loading: false, func: this.downloadCode},
+        {id: 4, title: "下载model", icon: "download", loading: false, func: this.downloadModel},
       ]
     }
   },
@@ -83,6 +84,32 @@ export default {
         link.style.display = 'none'
         link.href = href
         link.download = "波士顿房价预测.py"
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+      // graphApi.getGraphCode(1).then(res => {
+      //   console.log(res);
+      // }).catch(err => {
+      //   console.log(err);
+      // })
+      operation.loading = false
+    },
+
+    downloadModel(operation) {
+      operation.loading = true
+      let url = "http://127.0.0.1:8000/media/file/model.pkl"
+      this.$axios({
+        method: "get",
+        url: url,
+        responseType: "blob"
+      }).then(res => {
+        let blob = new Blob([res.data], {type: 'application/octet-stream'})
+        let href = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = href
+        link.download = "model.pkl"
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)

@@ -162,8 +162,8 @@ document.oncontextmenu = function () {
   overflow: hidden;
   position: relative;
   border: 1px solid #ebedf0;
-  borderRadius: 2px;
-  textAlign: center;
+  border-radius: 2px;
+  text-align: center;
   background: #fafafa;
 }
 

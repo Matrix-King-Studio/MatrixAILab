@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    <editor></editor>
+    <router-link to="/"></router-link>
+    <router-link to="/login"></router-link>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import editor from "@/components/Editor/editor";
+
 
 export default {
   name: 'App',
   components: {
-    editor
   }
 }
 </script>

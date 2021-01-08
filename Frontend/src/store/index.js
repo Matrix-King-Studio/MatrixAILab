@@ -13,6 +13,16 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 }, {})
 
 const store = new Vuex.Store({
+    state: {
+
+    },
+    mutations: {
+
+    },
+    // 异步操作处理
+    actions: {
+
+    },
     modules,
     getters
 })

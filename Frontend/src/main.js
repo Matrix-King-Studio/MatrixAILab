@@ -4,8 +4,12 @@ import App from './App.vue'
 import router from '@/router'
 //导入字体图标
 import '@/assets/fonts/iconfont.css'
+//导入graph中的彩色icon
+import '@/assets/icon_custom/iconfont.css'
+import '@/assets/icon_custom/iconfont.js'
 // 导入全局样式表
 import '@/assets/css/global.css'
+import '@/assets/css/normalize.css'
 // 导入element ui
 import ElementUI, { Message } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';

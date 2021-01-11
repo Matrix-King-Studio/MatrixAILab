@@ -4,6 +4,8 @@ import Login from '@/views/Login.vue';
 import editor from "@/views/editor";
 import register from "@/views/register";
 import forgetpass from "@/views/forgetpass"
+import { from } from 'core-js/fn/array';
+import graph from "@/views/graph";
 
 Vue.use(VueRouter)
 
@@ -26,6 +28,11 @@ const routes = [{
         path: '/forgetpass',
         name: 'forgetpass',
         component: forgetpass
+    },
+    {
+        path: '/graph',
+        name: 'graph',
+        component: graph
     },
     // {
     //     path: '/about',

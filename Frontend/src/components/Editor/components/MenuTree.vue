@@ -253,6 +253,9 @@ export default {
   overflow: auto;
   max-height: 800px;
 }
+.ant-tree::-webkit-scrollbar {
+  display:none;
+}
 .resize{
   cursor: col-resize;
   position: absolute;

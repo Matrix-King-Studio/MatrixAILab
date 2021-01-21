@@ -48,17 +48,17 @@ export default {
             forgetpassFormRules:{
                 // 验证用户名
                 username:[
-                    {require:true,message:"请输入用户名",trigger:"blur"},
+                    {required:true,message:"请输入用户名",trigger:"blur"},
                     {min:2,max:10,message:"长度在 2 到 10 个字符之间",trigger:"blur"}
                 ],
                 // 验证密码
                 password:[
-                    {require:true,message:"请输入密码",trigger:"blur"},
+                    {required:true,message:"请输入密码",trigger:"blur"},
                     {min:6,max:15,message:"长度在 6 到 15 个字符之间",trigger:"blur"}
                 ],
                 //验证手机号
                  phonenum:[
-                    {require:true,message:"请输入手机号",trigger:"blur"},
+                    {required:true,message:"请输入手机号",trigger:"blur"},
                     {min:11,max:11,message:"手机号长度为11位",trigger:"blur"}
                 ],
             }
@@ -72,12 +72,14 @@ export default {
 <style scoped>
 .forgetpass_container{
     height: 100%;
-    background-color: #2b4b6b;
+    background-image: url('../assets/login/bg.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
 .forgetpass_box{
     width: 450px;
     height: 380px;
-    background-color: #fff;
+    background-color: rgb(247,249,251);
     border-radius: 3px;
     position: absolute;
     left: 50%;

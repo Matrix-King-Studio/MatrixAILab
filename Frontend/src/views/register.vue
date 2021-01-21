@@ -11,6 +11,14 @@
                 <el-form-item prop="username">
                     <el-input  placeholder="请输入用户名" v-model="registerForm.username" prefix-icon="iconfont icon-user"></el-input>
                 </el-form-item>
+                <!-- email -->
+                <el-form-item prop="email">
+                    <el-input  placeholder="请输入邮箱" v-model="registerForm.email" prefix-icon="iconfont icon-youxiang"></el-input>
+                </el-form-item>
+                <!-- 滑块验证 -->
+                <el-form-item prop="status">
+                    <JcRange :status="status" @Cstatus="Cstatus"></JcRange>
+                </el-form-item>
                 <!-- 密码 -->
                 <el-form-item prop="password">
                     <el-input  placeholder="请输入密码" v-model="registerForm.password" prefix-icon="iconfont icon-3702mima" type="password" autocomplete="off" show-password></el-input>
@@ -18,15 +26,6 @@
                 <!-- 确认密码 -->
                 <el-form-item prop="checkPass">
                     <el-input placeholder="请再次输入密码" v-model="registerForm.checkPass" type="password"  prefix-icon="iconfont icon-3702mima" autocomplete="off" show-password></el-input>
-                </el-form-item>
-                <!-- 手机号 -->
-                <el-form-item prop="phonenum" class="phonenum">
-                    <el-input class="phone_input"  placeholder="请输入手机号" prefix-icon="el-icon-mobile-phone" v-model="registerForm.phonenum"></el-input>
-                    <el-button type="primary">发送验证码</el-button>
-                </el-form-item>
-                <!-- 验证码 -->
-                <el-form-item prop="checkcode">
-                    <el-input placeholder="请输入验证码" v-model="registerForm.checkcode"  prefix-icon="iconfont icon-3702mima" autocomplete="off"></el-input>
                 </el-form-item>
                 <!-- 按钮区域 -->
                 <el-form-item>
@@ -38,64 +37,89 @@
 </template>
 <script>
 import userApi from '@/config/api/user'
+import JcRange from '@/components/public/JcRange.vue'
+
 export default {
+    components:{
+        JcRange
+    },
     data() {
         var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.registerForm.password) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
-          callback();
-        }
-      };
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.registerForm.password) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        };
+        var checkStatus = (rule, value, callback) => {
+            if (this.status == false) {
+                return callback(new Error("请拖动滑块完成验证"));
+            }else {
+                callback(new Error(''));
+            }
+        };
         return {
             // 注册表单的数据绑定对象
             registerForm:{
                 username:'',
+                email:'',
                 password:'',
                 checkPass:'',
-                phonenum:'',
-                checkcode:''
+                
             },
             // 表单的验证规则对象
             registerFormRules:{
                 // 验证用户名
                 username:[
-                    {require:true,message:"请输入用户名",trigger:"blur"},
+                    {required:true,message:"请输入用户名",trigger:"blur"},
                     {min:2,max:10,message:"长度在 2 到 10 个字符之间",trigger:"blur"}
                 ],
+                // 验证邮箱
+                email:[
+                    {required:true,message:"请输入邮箱",trigger:"blur"},
+                    {min:10,max:20,message:"长度在 10 到 20 个字符之间",trigger:"blur"}
+                ],
+                status:[{validator: checkStatus, trigger: "change" }],
                 // 验证密码
                 password:[
-                    {require:true,message:"请输入密码",trigger:"blur"},
+                    {required:true,message:"请输入密码",trigger:"blur"},
                     {min:6,max:15,message:"长度在 6 到 15 个字符之间",trigger:"blur"}
                 ],
                 //二次密码
                 checkPass:[
                    {validator: validatePass2, trigger:'blur' }
                 ],
-                //验证手机号
-                 phonenum:[
-                    {require:true,message:"请输入手机号",trigger:"blur"},
-                    {min:11,max:11,message:"手机号长度为11位",trigger:"blur"}
-                ],
-            }
+                
+            },
+            status:false
         }
     },
     methods:{
-        
-    }
+        register(){
+            this.$refs.registerFormRef.validate(async valid =>{
+
+            })
+        },
+        Cstatus(data){
+            this.status=data;
+        }
+    },
+   
 }
 </script>
 <style scoped>
 .register_container{
     height: 100%;
-    background-color: #2b4b6b;
+    background-image: url('../assets/login/bg.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
 .register_box{
     width: 450px;
     height: 450px;
-    background-color: #fff;
+    background-color: rgb(247,249,251);
     border-radius: 3px;
     position: absolute;
     left: 50%;

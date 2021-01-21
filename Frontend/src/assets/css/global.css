@@ -76,11 +76,11 @@ ul {
     font-size: inherit;
 }
 
-.fl {
+.left {
     float: left;
 }
 
-.fr {
+.right {
     float: right;
 }
 

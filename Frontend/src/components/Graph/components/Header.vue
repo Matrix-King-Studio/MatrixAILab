@@ -7,10 +7,8 @@
             <router-view></router-view>
         </div>
         <div class="header_center">
-            <span>团队 
-                <i class="el-icon-arrow-down"></i>
-            </span>
-            <span><router-link to="/graph" class="nav nav_active">个人</router-link></span>
+            <span :style="{'cursor':'pointer'}">Projects</span>
+            <span><router-link to="/graph" class="nav nav_active">Graphs</router-link></span>
             <span><router-link to="/graph/recommend" class="nav">推荐</router-link></span>
             <span><router-link to="/graph/template" class="nav">模板</router-link></span>
         </div>

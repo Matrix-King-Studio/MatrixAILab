@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      addNodeEdge: false
+      addNodeEdge: false,
     }
   },
   computed: {
@@ -59,7 +59,8 @@ export default {
       hoverNode.init()
       selectNode.init()
     },
-  }
+  },
+  
 }
 </script>
 

@@ -5,11 +5,6 @@
             <div class="avatar_box">
                 <img src="../assets/logo.png" alt="">
             </div>
-            <!-- 注册按钮 -->
-            <div class="register">
-                <span>没有账号?</span>
-                <router-link class="register_btn" to="/register">立即注册</router-link>
-            </div>
             <!-- 登录表单区域 -->
             <el-form ref="loginFormRef" :rules="loginFormRules" label-width="0px" class="login_form" :model="loginForm">
                 <!-- 用户名 -->
@@ -20,21 +15,38 @@
                 <el-form-item prop="password">
                     <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" type="password"></el-input>
                 </el-form-item>
+                <el-form-item prop="status">
+                    <JcRange :status="status" @Cstatus="Cstatus"></JcRange>
+                </el-form-item>
                 <!-- 按钮区域 -->
                 <el-form-item class="btns">
-                    <el-button @click="login" type="primary">登录</el-button>
-                    <el-button type="info">
-                        <router-link class="forgetpass" to="/forgetpass">忘记密码</router-link>
-                    </el-button>
+                    <el-button class="login_btn" @click="login" type="primary">登录</el-button>
                 </el-form-item>
             </el-form>
+            <div class="option">
+                <el-button class="forgetpass" size="small">
+                    <router-link class="forgetpass_btn" to="/forgetpass">忘记密码</router-link>
+                </el-button>
+                <el-button size="small" class="register">
+                    <router-link class="register_btn" to="/register">立即注册</router-link>
+                </el-button>
+            </div>
         </div>
     </div>
 </template>
 <script>
 import userApi from '@/config/api/user'
+import JcRange from '@/components/public/JcRange.vue'
+
 export default {
     data() {
+        var checkStatus = (rule, value, callback) => {
+            if (this.status == false) {
+                return callback(new Error("请拖动滑块完成验证"));
+            } else {
+                callback();
+            }
+        };
         return {
             // 登录表单的数据绑定对象
             loginForm:{
@@ -45,17 +57,23 @@ export default {
             loginFormRules:{
                 // 验证用户名
                 username:[
-                    {require:true,message:"请输入用户名",trigger:"blur"},
+                    {required:true,message:"请输入用户名",trigger:"blur"},
                     {min:2,max:10,message:"长度在 2 到 10 个字符之间",trigger:"blur"}
                 ],
                 // 验证密码
                 password:[
-                    {require:true,message:"请输入密码",trigger:"blur"},
+                    {required:true,message:"请输入密码",trigger:"blur"},
                     {min:6,max:15,message:"长度在 6 到 15 个字符之间",trigger:"blur"}
-                ]
-            }
+                ],
+                status:[{validator: checkStatus, trigger: "change" }],
+                
+            },
+            status:false
         }
     },
+    components: {
+		JcRange
+	},
     methods:{
         login() {
             this.$refs.loginFormRef.validate(async valid =>{
@@ -63,25 +81,30 @@ export default {
                 // const{data:res}= this.$axios.post('admin',this.loginForm);
                 // if(res.meta.status!=200) return this.$message.error('登录失败！');
                 // this.$message.success('登录成功！');
-                userApi.login(id).then(res=>{
-                    console.log(res);
-                }).catch(err=>{ // eslint-disable-line no-unused-vars
-                    console.log(err);
-                });
+                // userApi.login(id).then(res=>{
+                //     console.log(res);
+                // }).catch(err=>{ // eslint-disable-line no-unused-vars
+                //     console.log(err);
+                // });
             }) 
+        },
+        Cstatus(data){
+            this.status=data;
         }
-    }
+    },
 }
 </script>
 <style scoped>
 .login_container{
     height: 100%;
-    background-color: #2b4b6b;
+    background-image: url('../assets/login/bg.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
 .login_box{
     width: 450px;
-    height: 300px;
-    background-color: #fff;
+    height: 370px;
+    background-color: rgb(247,249,251);
     border-radius: 3px;
     position: absolute;
     left: 50%;
@@ -98,7 +121,7 @@ export default {
     position: absolute;
     left: 50%;
     transform: translate(-50%,-50%);
-    background-color: #fff;
+    background-color: rgb(247,249,251);
 }
 .login_box .avatar_box img {
     width: 100%;
@@ -112,20 +135,34 @@ export default {
     width: 100%;
     padding: 0 20px;
     box-sizing: border-box;
+    margin-bottom: 35px;
 }
 .btns{
-    display: flex;
-    justify-content: flex-end;
+    margin-top: 10px;
+    width: 100%;
+}
+.btns .login_btn{
+    width: 100%;
+}
+.option{
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    bottom: 5px;
+    padding: 0 20px;
 }
 .forgetpass{
-    color: #fff;
+    float: right;
+    
+}
+.forgetpass .forgetpass_btn{
+    color:skyblue;
 }
 .register{
-    position: absolute;
-    right: 15px;
-    top: 20px;
+    float: left;
+    margin-left: 0px !important;
 }
 .register .register_btn{
-    color: red;
+    color:skyblue;   
 }
 </style>

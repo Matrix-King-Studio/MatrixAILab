@@ -1,79 +1,85 @@
 {
-  "id": "",
-  "name": "",
-  "font_family": "iconfont",
-  "css_prefix_text": "icon-",
-  "description": "",
-  "glyphs": [
-    {
-      "icon_id": "4844399",
-      "name": "DESIGN-UI",
-      "font_class": "DESIGN_huaban",
-      "unicode": "e513",
-      "unicode_decimal": 58643
-    },
-    {
-      "icon_id": "5311294",
-      "name": "文件夹",
-      "font_class": "wenjianjia",
-      "unicode": "e501",
-      "unicode_decimal": 58625
-    },
-    {
-      "icon_id": "10998801",
-      "name": "网络组",
-      "font_class": "wangluozu",
-      "unicode": "e63d",
-      "unicode_decimal": 58941
-    },
-    {
-      "icon_id": "11777375",
-      "name": "连接",
-      "font_class": "lianjie",
-      "unicode": "e6a6",
-      "unicode_decimal": 59046
-    },
-    {
-      "icon_id": "12008739",
-      "name": "curriculum_living",
-      "font_class": "curriculum_living",
-      "unicode": "e69e",
-      "unicode_decimal": 59038
-    },
-    {
-      "icon_id": "12219897",
-      "name": "笔记",
-      "font_class": "bjON",
-      "unicode": "e5b9",
-      "unicode_decimal": 58809
-    },
-    {
-      "icon_id": "12968125",
-      "name": "导入",
-      "font_class": "daoru",
-      "unicode": "e629",
-      "unicode_decimal": 58921
-    },
-    {
-      "icon_id": "18213142",
-      "name": "思维导图",
-      "font_class": "siweidaotu",
-      "unicode": "e6de",
-      "unicode_decimal": 59102
-    },
-    {
-      "icon_id": "18213490",
-      "name": "流程图",
-      "font_class": "liuchengtu",
-      "unicode": "e6e6",
-      "unicode_decimal": 59110
-    },
-    {
-      "icon_id": "18792736",
-      "name": "组织",
-      "font_class": "zu9999",
-      "unicode": "e6dd",
-      "unicode_decimal": 59101
-    }
-  ]
+    "id": "",
+    "name": "",
+    "font_family": "iconfont",
+    "css_prefix_text": "icon-",
+    "description": "",
+    "glyphs": [{
+            "icon_id": "4844399",
+            "name": "DESIGN-UI",
+            "font_class": "DESIGN_huaban",
+            "unicode": "e513",
+            "unicode_decimal": 58643
+        },
+        {
+            "icon_id": "5311294",
+            "name": "文件夹",
+            "font_class": "wenjianjia",
+            "unicode": "e501",
+            "unicode_decimal": 58625
+        },
+        {
+            "icon_id": "10998801",
+            "name": "网络组",
+            "font_class": "wangluozu",
+            "unicode": "e63d",
+            "unicode_decimal": 58941
+        },
+        {
+            "icon_id": "11777375",
+            "name": "连接",
+            "font_class": "lianjie",
+            "unicode": "e6a6",
+            "unicode_decimal": 59046
+        },
+        {
+            "icon_id": "12008739",
+            "name": "curriculum_living",
+            "font_class": "curriculum_living",
+            "unicode": "e69e",
+            "unicode_decimal": 59038
+        },
+        {
+            "icon_id": "12219897",
+            "name": "笔记",
+            "font_class": "bjON",
+            "unicode": "e5b9",
+            "unicode_decimal": 58809
+        },
+        {
+            "icon_id": "12968125",
+            "name": "导入",
+            "font_class": "daoru",
+            "unicode": "e629",
+            "unicode_decimal": 58921
+        },
+        {
+            "icon_id": "18213142",
+            "name": "思维导图",
+            "font_class": "siweidaotu",
+            "unicode": "e6de",
+            "unicode_decimal": 59102
+        },
+        {
+            "icon_id": "18213490",
+            "name": "流程图",
+            "font_class": "liuchengtu",
+            "unicode": "e6e6",
+            "unicode_decimal": 59110
+        },
+        {
+            "icon_id": "18792736",
+            "name": "组织",
+            "font_class": "zu9999",
+            "unicode": "e6dd",
+            "unicode_decimal": 59101
+        },
+        {
+            "icon_id": "18525136",
+            "name": "新建",
+            "font_class": "xinjian",
+            "unicode": "e7a9",
+            "unicode_decimal": 59305
+        }
+    ]
 }

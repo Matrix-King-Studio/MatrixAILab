@@ -75,7 +75,7 @@ export default {
 
     getContextMenu(x, y) {
       let data = {
-        x: x,
+        x: x-400,
         y: y,
         minWidth: 230,
         items: [
@@ -85,7 +85,6 @@ export default {
               graphApi.getRunGraphNodeResult(this.graphId, this.selectNode._cfg.id).then(res => {
                 this.modalVisible = true
                 this.data = res.data
-
                 if (this.data.type === "DataFrame") {
                   this.modalWidth = 1100
                   this.chart.source(this.data.value);

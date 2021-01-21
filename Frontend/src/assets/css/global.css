@@ -76,11 +76,11 @@ ul {
     font-size: inherit;
 }
 
-.fl {
+.left {
     float: left;
 }
 
-.fr {
+.right {
     float: right;
 }
 
@@ -133,4 +133,11 @@ textarea::-webkit-scrollbar-thumb {
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
+}
+
+aside.ant-layout-sider {
+    flex: 0 0 auto !important;
+    max-width: 400px !important;
+    min-width: 200px !important;
+    width: auto !important;
 }

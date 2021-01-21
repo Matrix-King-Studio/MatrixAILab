@@ -14,10 +14,12 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 
 const store = new Vuex.Store({
     state: {
-
+        graphFilesCount: 0,
     },
     mutations: {
-
+        filesCount(state, payload) {
+            state.graphFilesCount = payload.count
+        }
     },
     // 异步操作处理
     actions: {

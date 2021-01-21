@@ -1,31 +1,34 @@
 <template>
-  <div>
-    <a-input-search
-      style="margin-bottom: 8px"
-      placeholder="Search"
-      @change="onChange"/>
-    <a-tree
-      showLine
-      v-if="treeData.length > 0"
-      :style="treeStyle"
-      :defaultExpandAll="false"
-      :draggable="true"
-      :tree-data="treeData"
-      @dragend="dragend"
-      @dragover="dragover"
-      @dragenter="dragenter"
-      @dragleave="dragleave"
-      @dragstart="dragstart"
-      @expand="onExpand">
-      <template slot="name" slot-scope="{ name }">
-        <span v-if="name.indexOf(searchValue) > -1">
-          {{ name.substr(0, name.indexOf(searchValue)) }}
-          <span style="color: #f50">{{ searchValue }}</span>
-          {{ name.substr(name.indexOf(searchValue) + searchValue.length) }}
-        </span>
-        <span v-else>{{ name }}</span>
-      </template>
-    </a-tree>
+  <div class="sider">
+    <div class="left">
+      <a-input-search
+        style="margin-bottom: 8px"
+        placeholder="Search"
+        @change="onChange"/>
+      <a-tree
+        showLine
+        v-if="treeData.length > 0"
+        :style="treeStyle"
+        :defaultExpandAll="false"
+        :draggable="true"
+        :tree-data="treeData"
+        @dragend="dragend"
+        @dragover="dragover"
+        @dragenter="dragenter"
+        @dragleave="dragleave"
+        @dragstart="dragstart"
+        @expand="onExpand">
+        <template slot="name" slot-scope="{ name }">
+          <span v-if="name.indexOf(searchValue) > -1">
+            {{ name.substr(0, name.indexOf(searchValue)) }}
+            <span style="color: #f50">{{ searchValue }}</span>
+            {{ name.substr(name.indexOf(searchValue) + searchValue.length) }}
+          </span>
+          <span v-else>{{ name }}</span>
+        </template>
+      </a-tree>
+    </div>
+    <div class="resize"></div>
   </div>
 </template>
 
@@ -42,8 +45,9 @@ export default {
       treeStyle: {
         overflow: 'auto',
         maxHeight: `${document.body.clientHeight - 38 - 68}px`,
-        maxWidth: '300px',
-      }
+        //maxWidth: '300px',
+      },
+     
     }
   },
   computed: {
@@ -60,7 +64,50 @@ export default {
   created() {
     this.getTreeData()
   },
+  mounted() {
+    this.dragControllerDiv()
+  },
   methods: {
+    dragControllerDiv: function () {
+    var resize = document.getElementsByClassName('resize');
+    var left = document.getElementsByClassName('left');
+    var box = document.getElementsByClassName('sider');
+    for (let i = 0; i < resize.length; i++) {
+        // 鼠标按下事件
+        resize[i].onmousedown = function (e) {
+            //颜色改变提醒
+            resize[i].style.background = '#818181';
+            var startX = e.clientX;
+            resize[i].left = resize[i].offsetLeft;
+            // 鼠标拖动事件
+            document.onmousemove = function (e) {
+                var endX = e.clientX;
+                var moveLen = resize[i].left + (endX - startX); // （endx-startx）=移动的距离。resize[i].left+移动的距离=左边区域最后的宽度
+
+                if (moveLen < 200) moveLen = 200; // 左边区域的最小宽度为32px
+                if(moveLen > 400) moveLen = 400 ;
+                resize[i].style.left = moveLen; // 设置左侧区域的宽度
+
+                for (let j = 0; j < left.length; j++) {
+                  left[j].style.width = moveLen + 'px'; 
+                  
+                }
+            };
+
+            // 鼠标松开事件
+            document.onmouseup = function (evt) {
+                //颜色恢复
+                resize[i].style.background = '#d6d6d6';
+                document.onmousemove = null;
+                document.onmouseup = null;
+                resize[i].releaseCapture && resize[i].releaseCapture(); //当你不在需要继续获得鼠标消息就要应该调用ReleaseCapture()释放掉
+            };
+            resize[i].setCapture && resize[i].setCapture(); //该函数在属于当前线程的指定窗口里设置鼠标捕获
+            return false;
+        };
+      }
+    },
+
     getTreeData() {
       tree.getTreeData().then(res => {
         this.treeData = Object.values(res.data.data)
@@ -192,8 +239,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.sider{
+  margin-right: 10px;
+  position: relative;
+  height: 100%;
+}
+.left{
+  width: calc(100% - 0px);  /*左侧初始化宽度*/   
+  height: 100%;
+  background: #FFFFFF;
+}
 .ant-tree {
   overflow: auto;
   max-height: 800px;
+}
+.ant-tree::-webkit-scrollbar {
+  display:none;
+}
+.resize{
+  cursor: col-resize;
+  position: absolute;
+  top: 0;
+  right: -10px;
+  background-color: #d6d6d6;
+  border-radius: 5px;
+  width: 10px;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  /*z-index: 99999;*/
+  font-size: 32px;
+  color: white;
 }
 </style>

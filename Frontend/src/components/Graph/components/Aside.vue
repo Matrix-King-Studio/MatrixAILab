@@ -1,7 +1,11 @@
 <template>
     <div class="aside_container">
         <div class="container_box">
-            <el-button size="small" @click="toggleShow" class="new_file" type="primary">新建</el-button>
+            <el-button size="small" @click="toggleShow" class="new_file" round>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-xinjian"></use>
+                </svg>
+                新建</el-button>
             <div class="create_list" v-show="isShow">
                 <div>
                     <span class="icon_box">
@@ -90,34 +94,54 @@
                 </router-link>
             </div>
         </div>
-        <router-link to="/graph" class="aside_nav active">
-            <span class="el-icon-house"></span>
-            <label>我的文件</label>
+        <router-link v-for="(item,index) in navlist" :key="index+'1'" :to="item.router" class="aside_nav" :class="item.class">
+            <span :class="item.icon"></span>
+            <label>{{item.name}}</label>
         </router-link>
-        <router-link to="/graph/history" class="aside_nav">
-            <span class="el-icon-time"></span>
-            <label>最近修改</label>
-        </router-link>
-        <router-link to="/graph/colla" class="aside_nav">
-            <span class="el-icon-user"></span>
-            <label>与我协作</label>
-        </router-link>
-        <router-link to="/graph/fav" class="aside_nav">
-            <span class="el-icon-star-off"></span>
-            <label>我的收藏</label>
-        </router-link>
-        <router-link to="/graph/trash" class="aside_nav">
-            <span class="el-icon-delete"></span>
-            <label>回收站</label>
-        </router-link>
+        <div class="bottom_files">
+            <bottom-com></bottom-com>
+        </div>
     </div>
 </template>
 
 <script>
+import bottomCom from './Asidebottom'
 export default {
     data() {
         return {
-            isShow:false
+            isShow:false,
+            navlist:[
+                {
+                    name:'我的文件',
+                    router:'/graph',
+                    icon:'el-icon-house',
+                    class:'active'
+                },
+                {
+                    name:'最近修改',
+                    router:'/graph/history',
+                    icon:'el-icon-time',
+                    class:''
+                },
+                {
+                    name:'与我协作',
+                    router:'/graph/colla',
+                    icon:'el-icon-user',
+                    class:''
+                },
+                {
+                    name:'我的收藏',
+                    router:'/graph/fav',
+                    icon:'el-icon-star-off',
+                    class:''
+                },
+                {
+                    name:'回收站',
+                    router:'/graph/trash',
+                    icon:'el-icon-delete',
+                    class:''
+                },
+            ]
         }
     },
     methods: {
@@ -125,6 +149,9 @@ export default {
             this.isShow=!this.isShow
         }
     },
+    components:{
+        bottomCom
+    }
 }
 </script>
 
@@ -132,6 +159,7 @@ export default {
 .aside_container{
     width: 208px;
     height: calc(100% - 40px);
+    position: relative;
 }
 .container_box .create_list {
     position: fixed;
@@ -228,5 +256,12 @@ export default {
 .active{
     font-weight: 700;
     color: #555 !important;
+}
+.bottom_files{
+    position: absolute;
+    bottom: 70px;
+    left: 18px;
+    width: 175px;
+    z-index: 2;
 }
 </style>
